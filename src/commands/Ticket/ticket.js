@@ -67,7 +67,7 @@ export default {
                         .setRequired(false),
                 )
                 .addRoleOption((option) =>
-                    option
+                    option id: "1444077503139545269",
                         .setName("staff_role")
                         .setDescription(
                             "The role that can access tickets (optional).",
