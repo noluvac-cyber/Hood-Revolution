@@ -1,6 +1,6 @@
-const { SlashCommandBuilder, PermissionFlagsBits } = require('discord.js');
+import { SlashCommandBuilder, PermissionFlagsBits } from 'discord.js';
 
-module.exports = {
+export default {
     data: new SlashCommandBuilder()
         .setName('role')
         .setDescription('Add or remove roles from a user')
@@ -65,4 +65,3 @@ module.exports = {
         }
     }
 };
-
