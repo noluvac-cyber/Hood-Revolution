@@ -66,14 +66,20 @@ export default {
                         .addChannelTypes(ChannelType.GuildCategory)
                         .setRequired(false),
                 )
-                .addRoleOption((option) =>
-                    option id: "1444077503139545269",
-                        .setName("staff_role")
-                        .setDescription(
-                            "The role that can access tickets (optional).",
-                        )
-                        .setRequired(false),
-                )
+               permissionOverwrites: [
+                   {
+                       id: interaction.guild.id,
+                       deny: ["ViewChannel"]
+                    },       
+                    {   
+                       id: interaction.user.id,
+                       allow: ["ViewChannel", "SendMessages"]
+                    },
+                    {
+                       id: "1444077503139545269", // your staff role
+                       allow: ["ViewChannel", "SendMessages"]
+                    }
+                ]
                 .addIntegerOption((option) =>
                     option
                         .setName("max_tickets_per_user")
