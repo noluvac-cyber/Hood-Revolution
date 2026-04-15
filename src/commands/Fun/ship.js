@@ -19,6 +19,8 @@ export default {
   data: new SlashCommandBuilder()
     .setName("ship")
     .setDescription("Calculate the compatibility score between two people.")
+    .setDMPermission(true)                 // 🔓 Make command visible to everyone
+    .setDefaultMemberPermissions(null)     // 🔓 No Discord-level permission lock
     .addStringOption(option =>
       option
         .setName("name1")
@@ -40,7 +42,7 @@ export default {
     try {
       await InteractionHelper.safeDefer(interaction);
 
-      // 🔒 ROLE CHECK
+      // 🔒 ROLE CHECK — Only this role can USE the command
       const allowedRoleId = "1435011996931067966";
       if (!interaction.member.roles.cache.has(allowedRoleId)) {
         const embed = errorEmbed(
