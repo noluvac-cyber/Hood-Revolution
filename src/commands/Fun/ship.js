@@ -3,8 +3,8 @@ import { createEmbed, errorEmbed, successEmbed, infoEmbed, warningEmbed } from '
 import { logger } from '../../utils/logger.js';
 import { handleInteractionError, TitanBotError, ErrorTypes } from '../../utils/errorHandler.js';
 import { sanitizeInput } from '../../utils/sanitization.js';
-import { InteractionHelper } from '../../utils/interactionHelper.js';
 
+import { InteractionHelper } from '../../utils/interactionHelper.js';
 function stringToHash(str) {
   let hash = 0;
   for (let i = 0; i < str.length; i++) {
@@ -16,56 +16,46 @@ function stringToHash(str) {
 }
 
 export default {
-  data: new SlashCommandBuilder()
+    data: new SlashCommandBuilder()
     .setName("ship")
     .setDescription("Calculate the compatibility score between two people.")
-    .setDMPermission(true)                 // 🔓 Make command visible to everyone
-    .setDefaultMemberPermissions(null)     // 🔓 No Discord-level permission lock
-    .addStringOption(option =>
+    .addStringOption((option) =>
       option
         .setName("name1")
         .setDescription("The first name or user.")
         .setRequired(true)
-        .setMaxLength(100)
+        .setMaxLength(100),
     )
-    .addStringOption(option =>
+    .addStringOption((option) =>
       option
         .setName("name2")
         .setDescription("The second name or user.")
         .setRequired(true)
-        .setMaxLength(100)
+        .setMaxLength(100),
     ),
-
-  category: "Fun",
+  category: 'Fun',
 
   async execute(interaction, config, client) {
     try {
       await InteractionHelper.safeDefer(interaction);
 
-      // 🔒 ROLE CHECK — Only this role can USE the command
-      const allowedRoleId = "1435011996931067966";
-      if (!interaction.member.roles.cache.has(allowedRoleId)) {
-        const embed = errorEmbed(
-          "Permission Denied",
-          "You do not have permission to use this command."
-        );
-        return await InteractionHelper.safeEditReply(interaction, { embeds: [embed] });
-      }
-
       const name1Raw = interaction.options.getString("name1");
       const name2Raw = interaction.options.getString("name2");
 
-      if (!name1Raw || !name2Raw || name1Raw.trim().length === 0 || name2Raw.trim().length === 0) {
+      
+      if (!name1Raw || name1Raw.trim().length === 0 || !name2Raw || name2Raw.trim().length === 0) {
         throw new TitanBotError(
-          "Empty names provided to ship command",
+          'Empty names provided to ship command',
           ErrorTypes.USER_INPUT,
-          "Please provide valid names for both people!"
+          'Please provide valid names for both people!'
         );
       }
 
+      
       const name1 = sanitizeInput(name1Raw.trim(), 100);
       const name2 = sanitizeInput(name2Raw.trim(), 100);
 
+      
       if (name1.toLowerCase() === name2.toLowerCase()) {
         const embed = warningEmbed(
           "💖 Ship Score",
@@ -99,18 +89,20 @@ export default {
 
       const embed = successEmbed(
         `💖 Ship Score: ${name1} vs ${name2}`,
-        `Compatibility: **${score}%**\n\n\`${progressBar}\`\n\n*${description}*`
+        `Compatibility: **${score}%**\n\n\`${progressBar}\`\n\n*${description}*`,
       );
 
       await InteractionHelper.safeEditReply(interaction, { embeds: [embed] });
-
       logger.debug(`Ship command executed by user ${interaction.user.id} in guild ${interaction.guildId}`);
     } catch (error) {
-      logger.error("Ship command error:", error);
+      logger.error('Ship command error:', error);
       await handleInteractionError(interaction, error, {
-        commandName: "ship",
-        source: "ship_command"
+        commandName: 'ship',
+        source: 'ship_command'
       });
     }
-  }
+  },
 };
+
+
+
